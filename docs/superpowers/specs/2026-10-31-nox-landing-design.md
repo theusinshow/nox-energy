@@ -72,8 +72,9 @@ index.html              marcação semântica de todas as seções
 src/main.js             bootstrap: detecta capacidades, inicia scroll, cena e UI
 src/styles/main.css     tokens, layout, seções, fallback
 src/flavors.js          dados dos sabores (id, nome, cor, textos do rótulo)
-src/scene/scene.js      renderer, câmera, luzes, ambiente, loop, resize, bloom
-src/scene/can.js        geometria e materiais da lata; setFlavor(), API de pose
+src/scene/scene.js      renderer, câmera, luzes, ambiente, brilho, loop, resize; setFlavor()
+src/scene/profile.js    perfis 2D da lata (lógica pura, testada)
+src/scene/can.js        geometria e materiais da lata; API de pose
 src/scene/label.js      desenha o rótulo em canvas → CanvasTexture (por sabor)
 src/motion/scroll.js    Lenis + timelines do ScrollTrigger (pose da lata por seção)
 src/motion/intro.js     animação de entrada (lata + revelação do título)
@@ -99,14 +100,14 @@ src/ui/newsletter.js    feedback falso de inscrição
 - "NØX" na vertical em `--accent`, linhas finas, specs em mono pequeno, nome do sabor e um código decorativo (ex.: `N-01 / 473ML`).
 - Uma textura por sabor, gerada uma vez e guardada em cache.
 
-### 6.3 Iluminação e pós-processamento
+### 6.3 Iluminação e brilho
 - `RoomEnvironment` via `PMREMGenerator` para os reflexos.
-- Key light branca suave e uma rim light na cor do sabor por trás da lata.
-- `UnrealBloomPass` com intensidade baixa (só o neon brilha). Desligado no celular.
+- Key light branca suave e duas rim lights na cor do sabor, presas à lata.
+- **Sem bloom:** o canvas é transparente para o "NØX" gigante do hero ficar *atrás* da lata, e o bloom exige canvas opaco. O neon vem do `emissiveMap` do rótulo, das rim lights e de um plano de brilho radial atrás da lata.
 - `renderer.setPixelRatio(Math.min(devicePixelRatio, isMobile ? 1.5 : 2))`.
 
 ### 6.4 Troca de sabor
-Timeline GSAP de ~0.9s: a lata gira 360° no eixo Y e, na metade, troca a textura e tweena a cor da rim light e de `--accent` (no `document.documentElement`) para a nova cor. Cliques durante a troca são ignorados.
+Timeline GSAP de ~0.9s: a lata gira 360° no eixo Y e, na metade, troca a textura; a cor das rim lights, do brilho e de `--accent` (no `document.documentElement`) faz transição para a nova cor. Se o usuário escolher outro sabor durante a troca, o último escolhido é aplicado quando ela termina.
 
 ## 7. Movimento
 
