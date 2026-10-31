@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NØX Energy</title>
+    <meta name="description" content="NØX: energia que acende no escuro. Projeto conceitual de portfólio." />
+    <meta name="theme-color" content="#0A0B0A" />
+    <script>document.documentElement.classList.add('js');</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;600&family=Unbounded:wght@800&display=swap"
+    />
+  </head>
+  <body>
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+    <canvas id="scene" aria-hidden="true"></canvas>
+    <div class="grain" aria-hidden="true"></div>
+
+    <header class="nav">
+      <a class="nav__logo" href="#top" aria-label="NØX, voltar ao início">NØX</a>
+      <nav class="nav__links" aria-label="Principal">
+        <a href="#specs">Specs</a>
+        <a href="#sabores">Sabores</a>
+        <a href="#formula">Fórmula</a>
+      </nav>
+      <span class="mono nav__tag">N-Series / 2026</span>
+    </header>
+
+    <main id="conteudo">
+      <section class="hero" id="top">
+        <h1 class="hero__title" aria-label="NØX">
+          <span aria-hidden="true">N</span><span aria-hidden="true">Ø</span><span aria-hidden="true">X</span>
+        </h1>
+        <div class="can-fallback" aria-hidden="true"><span>NØX</span></div>
+        <div class="hero__bottom">
+          <p class="hero__tagline">Energia que acende<br />no escuro.</p>
+          <a class="btn" href="#sabores">Descubra os sabores</a>
+        </div>
+        <p class="mono hero__meta">160MG cafeína · 0G açúcar · 473ML</p>
+      </section>
+
+      <section class="specs" id="specs" aria-labelledby="specs-title">
+        <div class="specs__content">
+          <p class="mono eyebrow" data-reveal>02 / Specs</p>
+          <h2 class="section-title" id="specs-title" data-reveal>Tudo o que importa.<br />Nada que pese.</h2>
+          <dl class="specs__list">
+            <div class="spec"><dt class="mono">Cafeína</dt><dd class="spec__value">160<small>mg</small></dd></div>
+            <div class="spec"><dt class="mono">Açúcar</dt><dd class="spec__value">0<small>g</small></dd></div>
+            <div class="spec"><dt class="mono">Calorias</dt><dd class="spec__value">10<small>kcal</small></dd></div>
+          </dl>
+        </div>
+      </section>
+
+      <section class="flavors" id="sabores" aria-labelledby="flavors-title">
+        <div class="flavors__intro">
+          <p class="mono eyebrow" data-reveal>03 / Sabores</p>
+          <h2 class="section-title" id="flavors-title" data-reveal>Escolha sua<br />frequência.</h2>
+        </div>
+        <div class="flavors__control">
+          <fieldset class="flavor-picker">
+            <legend class="mono">Sabor</legend>
+            <!-- opções renderizadas a partir de src/flavors.js -->
+          </fieldset>
+          <p class="flavor-note" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section class="formula" id="formula" aria-labelledby="formula-title">
+        <p class="mono eyebrow" data-reveal>04 / Fórmula</p>
+        <h2 class="section-title" id="formula-title" data-reveal>Seis ingredientes.<br />Zero enrolação.</h2>
+        <ul class="formula__grid">
+          <li class="card">
+            <span class="mono">F-01</span>
+            <h3>Cafeína natural</h3>
+            <p class="card__dose">160mg</p>
+            <p>Extraída do grão de café verde. Foco rápido, sem pico e queda.</p>
+          </li>
+          <li class="card">
+            <span class="mono">F-02</span>
+            <h3>Taurina</h3>
+            <p class="card__dose">1000mg</p>
+            <p>Ajuda na resistência em treinos longos e noites de trabalho.</p>
+          </li>
+          <li class="card">
+            <span class="mono">F-03</span>
+            <h3>Vitaminas B</h3>
+            <p class="card__dose">B3 · B6 · B12</p>
+            <p>Participam da conversão do alimento em energia.</p>
+          </li>
+          <li class="card">
+            <span class="mono">F-04</span>
+            <h3>L-Teanina</h3>
+            <p class="card__dose">100mg</p>
+            <p>Equilibra a cafeína para uma energia estável, sem ansiedade.</p>
+          </li>
+          <li class="card">
+            <span class="mono">F-05</span>
+            <h3>Eletrólitos</h3>
+            <p class="card__dose">Na · K · Mg</p>
+            <p>Repõem os minerais que você perde no suor.</p>
+          </li>
+          <li class="card">
+            <span class="mono">F-06</span>
+            <h3>Sucralose</h3>
+            <p class="card__dose">0g açúcar</p>
+            <p>Doçura sem calorias e sem pico de glicose.</p>
+          </li>
+        </ul>
+      </section>
+
+      <section class="manifesto" aria-label="Manifesto">
+        <div class="marquee">
+          <div class="marquee__track">
+            <span>Sem açúcar <i>·</i> Sem pausa <i>·</i> Acende no escuro <i>·</i> NØX <i>·</i>&nbsp;</span>
+            <span aria-hidden="true">Sem açúcar <i>·</i> Sem pausa <i>·</i> Acende no escuro <i>·</i> NØX <i>·</i>&nbsp;</span>
+          </div>
+        </div>
+        <p class="manifesto__text" data-reveal>
+          Feito para quem rende quando o resto da cidade apaga. Turnos longos, treinos tarde da noite, a última
+          entrega antes do prazo.
+        </p>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <h2 class="section-title" data-reveal>Encontre perto<br />de você.</h2>
+      <form class="newsletter">
+        <label class="mono" for="email">Receba o aviso quando chegar na sua cidade</label>
+        <div class="newsletter__row">
+          <input id="email" type="email" name="email" placeholder="seu@email.com" autocomplete="email" required />
+          <button class="btn" type="submit">Avisar</button>
+        </div>
+        <p class="mono newsletter__status" aria-live="polite"></p>
+      </form>
+      <div class="mono footer__bottom">
+        <span>© 2026 NØX Energy Co.</span>
+        <span>Projeto conceitual de portfólio. Marca fictícia.</span>
+        <a href="#top">Voltar ao topo ↑</a>
+      </div>
+    </footer>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
