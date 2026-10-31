@@ -10,6 +10,14 @@ describe('flavors', () => {
     ]);
   });
 
+  it('cada sabor tem onda, frequência com ciclos inteiros e EAN de 12 dígitos', () => {
+    for (const f of FLAVORS) {
+      expect(['square', 'sine', 'saw']).toContain(f.wave);
+      expect(Number.isInteger(f.hz / 22)).toBe(true);
+      expect(f.ean).toMatch(/^\d{12}$/);
+    }
+  });
+
   it('o sabor padrão existe', () => {
     expect(getFlavor(DEFAULT_FLAVOR).name).toBe('Original');
   });

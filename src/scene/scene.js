@@ -8,7 +8,7 @@ import { getFlavor } from '../flavors.js';
 const yieldToMain = () => new Promise((resolve) => setTimeout(resolve, 0));
 
 // Renderer, câmera, luzes e lata. Rejeita se o WebGL não estiver disponível.
-export async function createScene(canvas, { flavorId, isMobile, reducedMotion }) {
+export async function createScene(canvas, { flavorId, isMobile, reducedMotion, fontsReady }) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
   renderer.setClearColor(0x000000, 0);
@@ -29,6 +29,8 @@ export async function createScene(canvas, { flavorId, isMobile, reducedMotion })
   key.position.set(3, 4, 5);
   scene.add(key);
 
+  // O rótulo é desenhado com as fontes do site: espera por elas antes de pintar o canvas.
+  await fontsReady;
   const can = createCan({ flavorId, maxAnisotropy: renderer.capabilities.getMaxAnisotropy() });
   scene.add(can.group);
   await yieldToMain();

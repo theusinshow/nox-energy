@@ -11,16 +11,22 @@ const isMobile = matchMedia('(max-width: 768px)').matches;
 
 // O rótulo é desenhado em canvas: sem as fontes carregadas ele sairia com a fonte do sistema.
 async function loadFonts() {
-  const fonts = ['800 100px Unbounded', '600 72px Manrope', '500 34px "JetBrains Mono"', '400 26px "JetBrains Mono"'];
+  const fonts = [
+    '800 100px Unbounded',
+    '400 16px Manrope',
+    '600 72px Manrope',
+    '400 26px "JetBrains Mono"',
+    '500 34px "JetBrains Mono"',
+  ];
   const timeout = new Promise((resolve) => setTimeout(resolve, 2500));
   await Promise.race([Promise.all(fonts.map((f) => document.fonts.load(f))), timeout]);
 }
 
 // Three.js fica num chunk separado (~150 kB gzip): o texto aparece sem esperar por ele.
-async function loadScene() {
+async function loadScene(fontsReady) {
   try {
     const { createScene } = await import('./scene/scene.js');
-    return await createScene(document.getElementById('scene'), { flavorId: DEFAULT_FLAVOR, isMobile, reducedMotion });
+    return await createScene(document.getElementById('scene'), { flavorId: DEFAULT_FLAVOR, isMobile, reducedMotion, fontsReady });
   } catch (err) {
     console.warn('WebGL indisponível, usando a lata em CSS.', err);
     root.classList.add('no-webgl');
@@ -29,8 +35,9 @@ async function loadScene() {
 }
 
 async function boot() {
-  const scenePromise = loadScene();
-  await loadFonts();
+  const fontsReady = loadFonts();
+  const scenePromise = loadScene(fontsReady);
+  await fontsReady;
 
   root.classList.add('is-ready');
   playIntro({ reducedMotion });
@@ -40,6 +47,7 @@ async function boot() {
   initNewsletter(document.querySelector('.newsletter'));
 
   const scene = await scenePromise;
+  if (import.meta.env.DEV) window.__nox = scene; // inspeção da lata no console durante o desenvolvimento
   initMotion(scene?.can ?? null);
   if (scene) playCanEntrance(scene.can, { reducedMotion });
 }
