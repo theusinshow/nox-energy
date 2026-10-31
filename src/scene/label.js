@@ -34,7 +34,7 @@ export function getLabelTextures(flavorId, maxAnisotropy = 1) {
   if (!cache.has(flavorId)) {
     const flavor = getFlavor(flavorId);
     const map = toTexture(drawColor(flavor), maxAnisotropy);
-    const emissiveMap = toTexture(drawGlow(flavor), maxAnisotropy);
+    const emissiveMap = toTexture(drawEmission(flavor), maxAnisotropy);
     map.colorSpace = emissiveMap.colorSpace = THREE.SRGBColorSpace;
     cache.set(flavorId, { map, emissiveMap });
   }
@@ -76,11 +76,11 @@ function drawColor(flavor) {
 }
 
 // Mapa de emissão: só a tinta neon acende; texto branco e fundo ficam apagados.
-function drawGlow(flavor) {
+function drawEmission(flavor) {
   const { canvas, ctx } = makeCanvas(0.5);
   ctx.fillStyle = '#000';
   ctx.fillRect(0, 0, W, H);
-  drawInk(ctx, flavor, { glow: true });
+  drawInk(ctx, flavor);
   return canvas;
 }
 
@@ -351,15 +351,11 @@ function drawRecycle(ctx, cx, cy, r, color) {
   ctx.restore();
 }
 
-// Tinta neon: aparece no mapa de cor e no de emissão. Em `glow`, ganha um halo.
-function drawInk(ctx, flavor, { glow = false } = {}) {
+// Tinta neon: aparece no mapa de cor e no de emissão, com borda seca, sem halo.
+function drawInk(ctx, flavor) {
   const accent = flavor.accent;
   ctx.save();
   ctx.fillStyle = ctx.strokeStyle = accent;
-  if (glow) {
-    ctx.shadowColor = accent;
-    ctx.shadowBlur = 10;
-  }
 
   // Filete na divisa entre ombro e corpo
   ctx.fillRect(0, SHOULDER - 2, W, 3);

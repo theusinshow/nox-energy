@@ -6,7 +6,7 @@ import { getFlavor } from '../flavors.js';
 const SEGMENTS = 64;
 
 // A lata separa três fontes de movimento para que não briguem entre si:
-// pose (scroll), intro (entrada) e flavorSpin (troca de sabor). update() soma tudo.
+// pose (scroll), intro (entrada), flavorSpin (troca de sabor) e drag (arraste). update() soma tudo.
 export function createCan({ flavorId, maxAnisotropy }) {
   const group = new THREE.Group(); // posição, escala e inclinação
   const spinner = new THREE.Group(); // giro no eixo Y
@@ -51,6 +51,7 @@ export function createCan({ flavorId, maxAnisotropy }) {
   const intro = { y: 0, spin: 0 };
   const flavorSpin = { value: 0 };
   const drift = { lean: 0, spin: 0 }; // inércia da rolagem, escrita pelo motion
+  const drag = { spin: 0, lean: 0 }; // giro com o mouse ou o dedo, escrito por ui/can-drag.js
   const tilt = { x: 0, y: 0 };
 
   function setLabel(id) {
@@ -65,11 +66,11 @@ export function createCan({ flavorId, maxAnisotropy }) {
     tilt.y += ((idle ? pointer.x * 0.25 : 0) - tilt.y) * 0.06;
     group.position.set(pose.x, pose.y + intro.y, pose.z);
     group.scale.setScalar(pose.scale);
-    group.rotation.set(pose.rotX + tilt.x, 0, tilt.y * 0.3 + drift.lean);
-    spinner.rotation.y = pose.rotY + intro.spin + flavorSpin.value + drift.spin + tilt.y + (idle ? time * 0.12 : 0);
+    group.rotation.set(pose.rotX + tilt.x, 0, tilt.y * 0.3 + drift.lean + drag.lean);
+    spinner.rotation.y = pose.rotY + intro.spin + flavorSpin.value + drift.spin + drag.spin + tilt.y + (idle ? time * 0.12 : 0);
   }
 
-  return { group, spinner, pose, intro, flavorSpin, drift, setLabel, update };
+  return { group, spinner, pose, intro, flavorSpin, drift, drag, setLabel, update };
 }
 
 // Torno com phiStart = PI (u = 0.5 de frente para a câmera) e v pelo comprimento de arco,

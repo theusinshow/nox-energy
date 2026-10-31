@@ -93,6 +93,77 @@ html.lenis body {
   transform: none;
 }
 
+/* ---------- Cortina de entrada ----------
+   Duas metades cinza, cada uma com a marca inteira; o recorte na diagonal faz as duas
+   parecerem uma tela só até se afastarem. */
+.loader {
+  --loader-bg: #2b2e2a;
+  display: none;
+}
+.js .loader {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: block;
+  /* Fundo inteiro por baixo das metades: esconde a fresta do antialias na diagonal. */
+  background: var(--loader-bg);
+  pointer-events: none;
+  /* Se o script não rodar, a cortina não prende a página. */
+  animation: loader-failsafe 0s 8s forwards;
+}
+.is-loading {
+  overflow: hidden;
+}
+.loader__half {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: var(--loader-bg);
+  will-change: transform;
+}
+.loader__half--first {
+  /* Passa 2px da diagonal e cobre a borda da outra metade. */
+  clip-path: polygon(0 0, calc(100% + 2px) 0, 0 calc(100% + 2px));
+}
+.loader__half--second {
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+}
+.loader__logo {
+  display: flex;
+  overflow: hidden;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(64px, 15vw, 220px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--accent);
+}
+.loader__logo span {
+  display: block;
+}
+.js .loader__logo span {
+  transform: translateY(110%);
+}
+.loader__cut {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+}
+@keyframes loader-failsafe {
+  to {
+    visibility: hidden;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .js .loader {
+    display: none;
+  }
+}
+
 /* ---------- Camadas ----------
    0: título gigante do hero (atrás da lata)
    1: canvas 3D (transparente)

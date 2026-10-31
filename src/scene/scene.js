@@ -3,7 +3,7 @@ import gsap from 'gsap';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { createCan } from './can.js';
 import { CAMERA } from './camera.js';
-import { FLAVORS, getFlavor } from '../flavors.js';
+import { FLAVORS } from '../flavors.js';
 
 // Devolve a thread principal entre etapas pesadas, para não gerar uma tarefa longa única.
 const yieldToMain = () => new Promise((resolve) => setTimeout(resolve, 0));
@@ -36,25 +36,12 @@ export async function createScene(canvas, { flavorId, isMobile, reducedMotion, f
   scene.add(can.group);
   await yieldToMain();
 
-  // Luzes de contorno e brilho na cor do sabor: presas à lata, acompanham o scroll.
-  const accent = new THREE.Color(getFlavor(flavorId).accent);
-  const rimLeft = new THREE.PointLight(accent, 18, 8, 1.5);
+  // Luzes de contorno neutras, presas à lata: desenham a silhueta sem tingir o fundo.
+  const rimLeft = new THREE.PointLight(0xdfe6ee, 10, 8, 1.5);
   rimLeft.position.set(-1.6, 0.8, -1.2);
-  const rimRight = new THREE.PointLight(accent, 12, 8, 1.5);
+  const rimRight = new THREE.PointLight(0xdfe6ee, 6, 8, 1.5);
   rimRight.position.set(1.6, -0.6, -1.2);
-  const glow = new THREE.Mesh(
-    new THREE.PlaneGeometry(5, 5),
-    new THREE.MeshBasicMaterial({
-      map: radialTexture(),
-      color: accent,
-      transparent: true,
-      opacity: 0.55,
-      depthWrite: false,
-      toneMapped: false,
-    }),
-  );
-  glow.position.z = -1.2;
-  can.group.add(rimLeft, rimRight, glow);
+  can.group.add(rimLeft, rimRight);
 
   const pointer = { x: 0, y: 0 };
   if (matchMedia('(pointer: fine)').matches) {
@@ -78,16 +65,16 @@ export async function createScene(canvas, { flavorId, isMobile, reducedMotion, f
   let drawnOffscreen = false;
   function render() {
     can.update(clock.getElapsedTime(), { pointer, idle });
-    // Com a lata (e o halo de 2.5 de raio) fora da tela, desenha um último frame vazio e para.
+    // Com a lata fora da tela (1.4 cobre a altura e a inclinação), desenha um último frame vazio e para.
     const { position, scale } = can.group;
-    const reach = 2.5 * scale.y;
+    const reach = 1.4 * scale.y;
     const offscreen = Math.abs(position.y) - reach > halfHeight || Math.abs(position.x) - reach > halfHeight * camera.aspect;
     if (offscreen && drawnOffscreen) return;
     drawnOffscreen = offscreen;
     renderer.render(scene, camera);
   }
 
-  // Retângulo da lata na tela, em px (sem o halo). Usado para auditar colisão com o texto.
+  // Retângulo da lata na tela, em px. Usado para auditar colisão com o texto.
   const box = new THREE.Box3();
   const corner = new THREE.Vector3();
   function canRect() {
@@ -111,12 +98,9 @@ export async function createScene(canvas, { flavorId, isMobile, reducedMotion, f
     // Gira para a frente ao avançar na lista e para trás ao voltar.
     const direction = order(id) > order(current) ? 1 : -1;
     current = id;
-    const target = new THREE.Color(getFlavor(id).accent);
-    const colors = [rimLeft.color, rimRight.color, glow.material.color];
 
     if (reducedMotion) {
       can.setLabel(id);
-      colors.forEach((c) => c.copy(target));
       return Promise.resolve();
     }
 
@@ -125,24 +109,9 @@ export async function createScene(canvas, { flavorId, isMobile, reducedMotion, f
       const tl = gsap.timeline({ onComplete: resolve });
       tl.to(can.flavorSpin, { value: `+=${Math.PI * 2 * direction}`, duration: 0.9, ease: 'power3.inOut' }, 0);
       tl.call(() => can.setLabel(id), null, 0.45);
-      colors.forEach((c) => tl.to(c, { r: target.r, g: target.g, b: target.b, duration: 0.5, ease: 'power2.out' }, 0.3));
     });
   }
 
   return { can, setFlavor, canRect };
 }
 
-function radialTexture() {
-  const c = document.createElement('canvas');
-  c.width = c.height = 256;
-  const ctx = c.getContext('2d');
-  const g = ctx.createRadialGradient(128, 128, 0, 128, 128, 128);
-  g.addColorStop(0, 'rgba(255,255,255,0.9)');
-  g.addColorStop(0.35, 'rgba(255,255,255,0.25)');
-  g.addColorStop(1, 'rgba(255,255,255,0)');
-  ctx.fillStyle = g;
-  ctx.fillRect(0, 0, 256, 256);
-  const texture = new THREE.CanvasTexture(c);
-  texture.colorSpace = THREE.SRGBColorSpace;
-  return texture;
-}

@@ -19,6 +19,16 @@
     />
   </head>
   <body>
+    <!-- Cortina de entrada (motion/loader.js): sai do DOM depois de abrir. -->
+    <div class="loader" aria-hidden="true">
+      <div class="loader__half loader__half--first">
+        <span class="loader__logo"><span>N</span><span>Ø</span><span>X</span></span>
+      </div>
+      <div class="loader__half loader__half--second">
+        <span class="loader__logo"><span>N</span><span>Ø</span><span>X</span></span>
+      </div>
+      <span class="loader__cut"></span>
+    </div>
     <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
     <canvas id="scene" aria-hidden="true"></canvas>
 

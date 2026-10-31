@@ -1,10 +1,12 @@
 import './styles/main.css';
 import { DEFAULT_FLAVOR } from './flavors.js';
 import { playIntro, playCanEntrance } from './motion/intro.js';
+import { openLoader } from './motion/loader.js';
 import { initMotion } from './motion/scroll.js';
 import { initFlavorPicker } from './ui/flavor-picker.js';
 import { initNewsletter } from './ui/newsletter.js';
 import { initNav } from './ui/nav.js';
+import { initCanDrag } from './ui/can-drag.js';
 
 const root = document.documentElement;
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -38,20 +40,27 @@ async function loadScene(fontsReady) {
 async function boot() {
   const fontsReady = loadFonts();
   const scenePromise = loadScene(fontsReady);
+  // A cortina espera a lata, até um limite, para ela entrar junto com o título.
+  const sceneOrTimeout = Promise.race([scenePromise, new Promise((resolve) => setTimeout(resolve, 2200))]);
   await fontsReady;
 
-  root.classList.add('is-ready');
   initNav(document.querySelector('.nav'), document.getElementById('menu'));
-  playIntro({ reducedMotion });
   initFlavorPicker(document.querySelector('.flavor-picker'), {
     onChange: (id) => scenePromise.then((scene) => scene?.setFlavor(id)),
   });
   initNewsletter(document.querySelector('.newsletter'));
 
+  await openLoader(document.querySelector('.loader'), { reducedMotion, ready: sceneOrTimeout });
+  root.classList.add('is-ready');
+  playIntro({ reducedMotion });
+
   const scene = await scenePromise;
   if (import.meta.env.DEV) window.__nox = scene; // inspeção da lata no console durante o desenvolvimento
   initMotion(scene?.can ?? null);
-  if (scene) playCanEntrance(scene.can, { reducedMotion });
+  if (scene) {
+    playCanEntrance(scene.can, { reducedMotion });
+    initCanDrag(scene, { reducedMotion });
+  }
 }
 
 boot();
