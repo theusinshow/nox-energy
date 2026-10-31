@@ -94,8 +94,9 @@ html.lenis body {
 }
 
 /* ---------- Cortina de entrada ----------
-   Duas metades cinza, cada uma com a marca inteira; o recorte na diagonal faz as duas
-   parecerem uma tela só até se afastarem. */
+   Duas metades cinza, cada uma com a marca inteira; o recorte segue a barra do Ø
+   (motion/loader.js) e faz as duas parecerem uma tela só até se afastarem.
+   O clip-path daqui é só o ponto de partida, antes da medida. */
 .loader {
   --loader-bg: #2b2e2a;
   display: none;
@@ -105,6 +106,7 @@ html.lenis body {
   inset: 0;
   z-index: 20;
   display: block;
+  overflow: hidden;
   /* Fundo inteiro por baixo das metades: esconde a fresta do antialias na diagonal. */
   background: var(--loader-bg);
   pointer-events: none;
@@ -147,8 +149,8 @@ html.lenis body {
 }
 .loader__cut {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 0;
+  left: 0;
   height: 1px;
   background: var(--accent);
   transform: scaleX(0);
