@@ -29,7 +29,21 @@
         <a href="#sabores">Sabores</a>
         <a href="#formula">Fórmula</a>
       </nav>
+      <a class="btn btn--small nav__cta" href="#sabores">Escolher sabor</a>
+      <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
     </header>
+
+    <!-- Menu do celular: tela cheia, fora do header (o header leva transform ao esconder). -->
+    <div class="menu" id="menu" data-lenis-prevent hidden>
+      <nav aria-label="Principal">
+        <ul class="menu__links">
+          <li style="--i: 0"><a href="#specs">Specs<span class="mono">160 mg · 0 g · 10 kcal</span></a></li>
+          <li style="--i: 1"><a href="#sabores">Sabores<span class="mono">Original · Ice · Berry</span></a></li>
+          <li style="--i: 2"><a href="#formula">Fórmula<span class="mono">6 ingredientes</span></a></li>
+        </ul>
+      </nav>
+      <a class="btn menu__cta" href="#sabores" style="--i: 3">Escolher sabor</a>
+    </div>
 
     <main id="conteudo">
       <section class="hero" id="top">
@@ -76,37 +90,31 @@
         <div class="can-slot" data-can-slot="formula" aria-hidden="true"></div>
         <ol class="formula__list">
           <li class="ingredient">
-            <span class="ingredient__code">F-01</span>
             <h3 class="ingredient__name">Cafeína natural</h3>
             <span class="ingredient__dose">160 mg</span>
             <p class="ingredient__desc">Extraída do grão de café verde. Foco rápido, sem pico e queda.</p>
           </li>
           <li class="ingredient">
-            <span class="ingredient__code">F-02</span>
             <h3 class="ingredient__name">Taurina</h3>
             <span class="ingredient__dose">1.000 mg</span>
             <p class="ingredient__desc">Ajuda na resistência em treinos longos e noites de trabalho.</p>
           </li>
           <li class="ingredient">
-            <span class="ingredient__code">F-03</span>
             <h3 class="ingredient__name">Vitaminas B</h3>
             <span class="ingredient__dose">B3 · B6 · B12</span>
             <p class="ingredient__desc">Participam da conversão do alimento em energia.</p>
           </li>
           <li class="ingredient">
-            <span class="ingredient__code">F-04</span>
             <h3 class="ingredient__name">L-Teanina</h3>
             <span class="ingredient__dose">100 mg</span>
             <p class="ingredient__desc">Equilibra a cafeína para uma energia estável, sem ansiedade.</p>
           </li>
           <li class="ingredient">
-            <span class="ingredient__code">F-05</span>
             <h3 class="ingredient__name">Eletrólitos</h3>
             <span class="ingredient__dose">Na · K · Mg</span>
             <p class="ingredient__desc">Repõem os minerais que você perde no suor.</p>
           </li>
           <li class="ingredient">
-            <span class="ingredient__code">F-06</span>
             <h3 class="ingredient__name">Sucralose</h3>
             <span class="ingredient__dose">0 g açúcar</span>
             <p class="ingredient__desc">Doçura sem calorias e sem pico de glicose.</p>

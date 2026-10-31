@@ -4,6 +4,7 @@ import { playIntro, playCanEntrance } from './motion/intro.js';
 import { initMotion } from './motion/scroll.js';
 import { initFlavorPicker } from './ui/flavor-picker.js';
 import { initNewsletter } from './ui/newsletter.js';
+import { initNav } from './ui/nav.js';
 
 const root = document.documentElement;
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -40,6 +41,7 @@ async function boot() {
   await fontsReady;
 
   root.classList.add('is-ready');
+  initNav(document.querySelector('.nav'), document.getElementById('menu'));
   playIntro({ reducedMotion });
   initFlavorPicker(document.querySelector('.flavor-picker'), {
     onChange: (id) => scenePromise.then((scene) => scene?.setFlavor(id)),

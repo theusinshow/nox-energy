@@ -200,21 +200,39 @@ main > section > *,
 }
 
 /* ---------- Nav ---------- */
+/* Transparente no topo; fora dele vira uma faixa sólida com fio, e a lata passa por
+   baixo dela sem ficar sob o texto. Some ao descer e volta ao subir (ui/nav.js). */
 .nav {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 4;
-  display: flex;
+  z-index: 6;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
   gap: 24px;
-  padding: 20px var(--gutter) 36px;
-  /* Opaco atrás dos links: a lata passa por baixo da barra sem ficar sob o texto. */
-  background: linear-gradient(to bottom, var(--bg) 58%, transparent);
+  height: 72px;
+  padding-inline: var(--gutter);
+  border-bottom: 1px solid transparent;
+  transition:
+    transform var(--dur-3) var(--ease-out-quart),
+    background-color var(--dur-2) var(--ease-out-quart),
+    border-color var(--dur-2) var(--ease-out-quart);
+}
+.nav.is-scrolled {
+  background: var(--bg);
+  border-bottom-color: var(--line);
+}
+.nav.is-hidden:not(:focus-within):not(.is-open) {
+  transform: translateY(-100%);
+}
+.nav.is-open {
+  background: transparent;
+  border-bottom-color: transparent;
 }
 .nav__logo {
+  justify-self: start;
   font-family: var(--font-display);
   font-size: 20px;
   letter-spacing: 0.04em;
@@ -222,15 +240,142 @@ main > section > *,
 }
 .nav__links {
   display: flex;
-  gap: 28px;
+  gap: 32px;
   font-size: 14px;
 }
 .nav__links a {
+  padding-block: 8px;
   color: var(--muted);
-  transition: color var(--dur-2) var(--ease-out-quart);
+  text-decoration: underline 1px transparent;
+  text-underline-offset: 8px;
+  transition:
+    color var(--dur-2) var(--ease-out-quart),
+    text-decoration-color var(--dur-2) var(--ease-out-quart);
 }
 .nav__links a:hover {
   color: var(--text);
+}
+/* Seção em tela: texto cheio e um fio de acento embaixo. */
+.nav__links a[aria-current] {
+  color: var(--text);
+  text-decoration-color: var(--accent);
+}
+.btn--small {
+  min-height: 36px;
+  padding: 0 16px;
+  font-size: 14px;
+}
+.nav__cta {
+  justify-self: end;
+  transition:
+    opacity var(--dur-3) var(--ease-out-quart),
+    visibility var(--dur-3),
+    background-color var(--dur-2) var(--ease-out-quart),
+    transform var(--dur-1) var(--ease-out-quart);
+}
+.nav:not(.is-past-hero) .nav__cta {
+  visibility: hidden;
+  opacity: 0;
+}
+.nav__toggle {
+  display: none;
+  justify-self: end;
+  min-height: 44px;
+  padding: 0 4px;
+  border: 0;
+  background: none;
+  color: var(--text);
+  font: 500 14px/1 var(--font-body);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+/* ---------- Menu do celular ---------- */
+.menu {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 96px var(--gutter) 32px;
+  overflow-y: auto;
+  background: var(--bg);
+  opacity: 0;
+  transition: opacity var(--dur-3) var(--ease-out-quart);
+}
+.menu[hidden] {
+  display: none;
+}
+.menu.is-visible {
+  opacity: 1;
+}
+.menu-open {
+  overflow: hidden;
+}
+.menu__links {
+  border-top: 1px solid var(--line);
+}
+.menu__links li,
+.menu__cta {
+  transform: translateY(12px);
+  opacity: 0;
+  transition:
+    transform var(--dur-3) var(--ease-out-quart) calc(var(--i) * 40ms + 60ms),
+    opacity var(--dur-3) var(--ease-out-quart) calc(var(--i) * 40ms + 60ms);
+}
+.menu.is-visible .menu__links li,
+.menu.is-visible .menu__cta {
+  transform: none;
+  opacity: 1;
+}
+.menu__links a {
+  display: grid;
+  gap: 4px;
+  padding-block: 20px;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(36px, 11vw, 56px);
+  line-height: 1;
+  text-transform: uppercase;
+}
+.menu__links .mono {
+  font-weight: 400;
+  text-transform: none;
+}
+.menu__links a[aria-current] {
+  color: var(--accent);
+}
+@media (prefers-reduced-motion: reduce) {
+  .menu__links li,
+  .menu__cta {
+    transform: none;
+  }
+}
+.menu__cta {
+  align-self: stretch;
+  justify-content: center;
+  margin-top: auto;
+}
+
+@media (max-width: 768px) {
+  .nav {
+    grid-template-columns: 1fr auto;
+    height: 64px;
+  }
+  .nav__links,
+  .nav__cta {
+    display: none;
+  }
+  .nav__toggle {
+    display: block;
+  }
+}
+@media (min-width: 769px) {
+  .menu {
+    display: none;
+  }
 }
 
 /* ---------- Hero ---------- */
@@ -487,20 +632,16 @@ main > section > *,
 }
 .ingredient {
   display: grid;
-  grid-template-columns: 4.5rem minmax(0, 1fr) 8.5rem minmax(0, 1.35fr);
+  grid-template-columns: minmax(0, 1fr) 8.5rem minmax(0, 1.35fr);
   align-items: baseline;
   gap: 24px;
   padding-block: 24px;
   border-top: 1px solid var(--line);
 }
-.ingredient__code,
 .ingredient__dose {
   font-family: var(--font-mono);
   font-size: 13px;
   font-variant-numeric: tabular-nums;
-}
-.ingredient__code {
-  color: var(--muted);
 }
 .ingredient__name {
   font-size: clamp(18px, 1.4vw, 20px);
@@ -669,13 +810,9 @@ main > section > *,
     display: none;
   }
   .ingredient {
-    grid-template-columns: 3.5rem minmax(0, 1fr);
-    gap: 8px 16px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
     padding-block: 20px;
-  }
-  .ingredient__dose,
-  .ingredient__desc {
-    grid-column: 2;
   }
   .formula {
     grid-template-columns: minmax(0, 1fr);

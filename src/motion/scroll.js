@@ -139,7 +139,9 @@ function initStage(can, stageList, lenis) {
 }
 
 function initSmoothScroll() {
-  const lenis = new Lenis({ lerp: 0.1 });
+  // Roda e trackpad: deslize amortecido um pouco mais pesado que o padrão (0.1).
+  // No toque o Lenis mantém a rolagem nativa, que já tem inércia.
+  const lenis = new Lenis({ lerp: 0.08 });
   lenis.on('scroll', ScrollTrigger.update);
   const tick = (time) => lenis.raf(time * 1000);
   gsap.ticker.add(tick);
@@ -150,7 +152,8 @@ function initSmoothScroll() {
     // O skip-link precisa do comportamento nativo para mover o foco.
     if (!link || link.classList.contains('skip-link')) return;
     e.preventDefault();
-    lenis.scrollTo(link.getAttribute('href'));
+    // Links do menu: viagem com começo e fim suaves, com a mesma curva da lata.
+    lenis.scrollTo(link.getAttribute('href'), { duration: 1.4, easing: easeInOutCubic });
   };
   document.addEventListener('click', onClick);
 

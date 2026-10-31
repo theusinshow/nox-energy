@@ -5,7 +5,15 @@ export function playIntro({ reducedMotion }) {
   if (reducedMotion) return;
   const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
   tl.from('.hero__title span', { yPercent: 115, duration: 1.3, stagger: 0.09 }, 0.1);
-  tl.from(['.nav', '.hero__bottom > *', '.hero__meta'], { opacity: 0, y: 16, duration: 1, stagger: 0.06, ease: 'power3.out' }, 0.6);
+  // Os filhos da barra, não ela: o header usa transform próprio para se esconder ao rolar.
+  tl.from(['.nav > :not(.nav__cta)', '.hero__bottom > *', '.hero__meta'], {
+    opacity: 0,
+    y: 16,
+    duration: 1,
+    stagger: 0.06,
+    ease: 'power3.out',
+    clearProps: 'opacity,transform',
+  }, 0.6);
 }
 
 // Entrada da lata: roda quando o chunk do Three.js termina de carregar.
