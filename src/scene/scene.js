@@ -4,8 +4,11 @@ import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment
 import { createCan } from './can.js';
 import { getFlavor } from '../flavors.js';
 
-// Renderer, câmera, luzes e lata. Lança erro se o WebGL não estiver disponível.
-export function createScene(canvas, { flavorId, isMobile, reducedMotion }) {
+// Devolve a thread principal entre etapas pesadas, para não gerar uma tarefa longa única.
+const yieldToMain = () => new Promise((resolve) => setTimeout(resolve, 0));
+
+// Renderer, câmera, luzes e lata. Rejeita se o WebGL não estiver disponível.
+export async function createScene(canvas, { flavorId, isMobile, reducedMotion }) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
   renderer.setClearColor(0x000000, 0);
@@ -20,6 +23,7 @@ export function createScene(canvas, { flavorId, isMobile, reducedMotion }) {
   scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
   scene.environmentIntensity = 0.55;
   pmrem.dispose();
+  await yieldToMain();
 
   const key = new THREE.DirectionalLight(0xffffff, 1.4);
   key.position.set(3, 4, 5);
@@ -27,6 +31,7 @@ export function createScene(canvas, { flavorId, isMobile, reducedMotion }) {
 
   const can = createCan({ flavorId, maxAnisotropy: renderer.capabilities.getMaxAnisotropy() });
   scene.add(can.group);
+  await yieldToMain();
 
   // Luzes de contorno e brilho na cor do sabor: presas à lata, acompanham o scroll.
   const accent = new THREE.Color(getFlavor(flavorId).accent);

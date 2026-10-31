@@ -21,7 +21,7 @@ export function createCan({ flavorId, maxAnisotropy }) {
     clearcoatRoughness: 0.35,
   });
   const body = new THREE.Mesh(
-    new THREE.CylinderGeometry(CAN.radius, CAN.radius, bodyHeight(), 96, 1, true, Math.PI),
+    new THREE.CylinderGeometry(CAN.radius, CAN.radius, bodyHeight(), 64, 1, true, Math.PI),
     bodyMat,
   );
   body.position.y = (CAN.bodyTop + CAN.bodyBottom) / 2;
@@ -33,7 +33,7 @@ export function createCan({ flavorId, maxAnisotropy }) {
     side: THREE.DoubleSide,
   });
   const lathe = (points) =>
-    new THREE.Mesh(new THREE.LatheGeometry(points.map(([x, y]) => new THREE.Vector2(x, y)), 96), metalMat);
+    new THREE.Mesh(new THREE.LatheGeometry(points.map(([x, y]) => new THREE.Vector2(x, y)), 64), metalMat);
 
   spinner.add(body, lathe(bottomProfile()), lathe(topProfile()), createTab(metalMat));
 

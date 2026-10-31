@@ -372,6 +372,9 @@ main > section > *,
   border-color: var(--accent);
   background: color-mix(in srgb, var(--accent) 10%, var(--surface));
 }
+.flavor-option:has(input:checked) .mono {
+  color: var(--text); /* o fundo tingido derruba o contraste do --muted abaixo de 4.5:1 */
+}
 .flavor-option:has(input:focus-visible) {
   outline: 2px solid var(--accent);
   outline-offset: 3px;

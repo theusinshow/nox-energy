@@ -1,7 +1,6 @@
 import './styles/main.css';
 import { DEFAULT_FLAVOR } from './flavors.js';
-import { createScene } from './scene/scene.js';
-import { playIntro } from './motion/intro.js';
+import { playIntro, playCanEntrance } from './motion/intro.js';
 import { initMotion } from './motion/scroll.js';
 import { initFlavorPicker } from './ui/flavor-picker.js';
 import { initNewsletter } from './ui/newsletter.js';
@@ -17,23 +16,32 @@ async function loadFonts() {
   await Promise.race([Promise.all(fonts.map((f) => document.fonts.load(f))), timeout]);
 }
 
-async function boot() {
-  await loadFonts();
-
-  let scene = null;
+// Three.js fica num chunk separado (~150 kB gzip): o texto aparece sem esperar por ele.
+async function loadScene() {
   try {
-    scene = createScene(document.getElementById('scene'), { flavorId: DEFAULT_FLAVOR, isMobile, reducedMotion });
+    const { createScene } = await import('./scene/scene.js');
+    return await createScene(document.getElementById('scene'), { flavorId: DEFAULT_FLAVOR, isMobile, reducedMotion });
   } catch (err) {
     console.warn('WebGL indisponível, usando a lata em CSS.', err);
     root.classList.add('no-webgl');
+    return null;
   }
+}
+
+async function boot() {
+  const scenePromise = loadScene();
+  await loadFonts();
 
   root.classList.add('is-ready');
-  initMotion(scene?.can ?? null);
-  playIntro(scene?.can ?? null, { reducedMotion });
-  initFlavorPicker(document.querySelector('.flavor-picker'), { onChange: (id) => scene?.setFlavor(id) });
+  playIntro({ reducedMotion });
+  initFlavorPicker(document.querySelector('.flavor-picker'), {
+    onChange: (id) => scenePromise.then((scene) => scene?.setFlavor(id)),
+  });
   initNewsletter(document.querySelector('.newsletter'));
-  return scene;
+
+  const scene = await scenePromise;
+  initMotion(scene?.can ?? null);
+  if (scene) playCanEntrance(scene.can, { reducedMotion });
 }
 
 boot();
