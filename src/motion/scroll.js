@@ -10,22 +10,27 @@ const POSES = {
     hero: { x: 0, y: -0.1, z: 0, rotX: 0.12, rotY: 0, scale: 1 },
     specs: { x: -1.7, y: 0, z: 0.4, rotX: -0.08, rotY: Math.PI * 1.25, scale: 1.05 },
     flavors: { x: 0.35, y: -0.05, z: 0.2, rotX: 0.05, rotY: Math.PI * 2, scale: 0.95 },
-    formula: { x: 1.5, y: 0.2, z: -2.5, rotX: 0.25, rotY: Math.PI * 2.6, scale: 0.85 },
+    formula: { x: 2.4, y: 0.1, z: -1.5, rotX: 0.2, rotY: Math.PI * 2.6, scale: 0.9 },
+    exit: { x: 2.4, y: 4.5, z: -1.5, rotX: -0.3, rotY: Math.PI * 3.2, scale: 0.9 },
   },
   mobile: {
     hero: { x: 0, y: 0.3, z: 0, rotX: 0.12, rotY: 0, scale: 0.62 },
-    specs: { x: 0.7, y: 0.5, z: -2, rotX: -0.08, rotY: Math.PI * 1.25, scale: 0.7 },
+    specs: { x: 0.55, y: -0.6, z: -1, rotX: -0.08, rotY: Math.PI * 1.25, scale: 0.62 },
     flavors: { x: 0, y: 0.15, z: 0, rotX: 0.05, rotY: Math.PI * 2, scale: 0.72 },
-    formula: { x: 0, y: 0.3, z: -3, rotX: 0.25, rotY: Math.PI * 2.6, scale: 0.7 },
+    // No celular a lista ocupa a largura toda: a lata já sai de cena em Fórmula.
+    formula: { x: 0, y: 4.5, z: -3, rotX: -0.3, rotY: Math.PI * 3.2, scale: 0.7 },
+    exit: { x: 0, y: 4.5, z: -3, rotX: -0.3, rotY: Math.PI * 3.2, scale: 0.7 },
   },
 };
 
-// Cada transição vai de "topo da próxima seção entra na tela" até "chega ao topo".
-// Como as seções têm pelo menos 100vh, os trechos não se sobrepõem.
+// Cada transição vai de "topo da próxima seção entra na tela" até "chega ao topo"
+// (ou ao `end` indicado). Os trechos não se sobrepõem.
+// A saída tira a lata de cena antes do manifesto, para ela não cobrir texto.
 const STEPS = [
   ['hero', 'specs', '#specs'],
   ['specs', 'flavors', '#sabores'],
   ['flavors', 'formula', '#formula'],
+  ['formula', 'exit', '.manifesto', 'top 35%'],
 ];
 
 export function initMotion(can) {
@@ -48,12 +53,12 @@ export function initMotion(can) {
     const lenis = initSmoothScroll();
     if (can) {
       // fromTo com os dois extremos explícitos: a pose fica certa mesmo ao recarregar no meio da página.
-      for (const [from, to, trigger] of STEPS) {
+      for (const [from, to, trigger, end = 'top top'] of STEPS) {
         gsap.fromTo(can.pose, { ...poses[from] }, {
           ...poses[to],
           ease: 'power1.inOut',
           immediateRender: false,
-          scrollTrigger: { trigger, start: 'top bottom', end: 'top top', scrub: 1 },
+          scrollTrigger: { trigger, start: 'top bottom', end, scrub: 1 },
         });
       }
     }
@@ -105,23 +110,6 @@ function initReveals() {
     stagger: 0.2,
     ease: 'power2.out',
     scrollTrigger: { trigger: '#specs', start: 'top 75%', end: 'center 60%', scrub: 1 },
-  });
-  for (const el of gsap.utils.toArray('[data-reveal]')) {
-    gsap.from(el, {
-      y: 40,
-      opacity: 0,
-      duration: 0.9,
-      ease: 'power3.out',
-      scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none reverse' },
-    });
-  }
-  gsap.from('.card', {
-    y: 60,
-    opacity: 0,
-    duration: 0.8,
-    stagger: 0.08,
-    ease: 'power3.out',
-    scrollTrigger: { trigger: '.formula__grid', start: 'top 80%' },
   });
 }
 

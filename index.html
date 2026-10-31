@@ -21,7 +21,6 @@
   <body>
     <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
     <canvas id="scene" aria-hidden="true"></canvas>
-    <div class="grain" aria-hidden="true"></div>
 
     <header class="nav">
       <a class="nav__logo" href="#top" aria-label="NØX, voltar ao início">NØX</a>
@@ -30,7 +29,6 @@
         <a href="#sabores">Sabores</a>
         <a href="#formula">Fórmula</a>
       </nav>
-      <span class="mono nav__tag">N-Series / 2026</span>
     </header>
 
     <main id="conteudo">
@@ -48,8 +46,7 @@
 
       <section class="specs" id="specs" aria-labelledby="specs-title">
         <div class="specs__content">
-          <p class="mono eyebrow" data-reveal>02 / Specs</p>
-          <h2 class="section-title" id="specs-title" data-reveal>Tudo o que importa.<br />Nada que pese.</h2>
+          <h2 class="section-title" id="specs-title">Tudo o que importa.<br />Nada que pese.</h2>
           <dl class="specs__list">
             <div class="spec"><dt class="mono">Cafeína</dt><dd class="spec__value">160<small>mg</small></dd></div>
             <div class="spec"><dt class="mono">Açúcar</dt><dd class="spec__value">0<small>g</small></dd></div>
@@ -60,12 +57,11 @@
 
       <section class="flavors" id="sabores" aria-labelledby="flavors-title">
         <div class="flavors__intro">
-          <p class="mono eyebrow" data-reveal>03 / Sabores</p>
-          <h2 class="section-title" id="flavors-title" data-reveal>Escolha sua<br />frequência.</h2>
+          <h2 class="section-title" id="flavors-title">Escolha sua<br />frequência.</h2>
         </div>
         <div class="flavors__control">
           <fieldset class="flavor-picker">
-            <legend class="mono">Sabor</legend>
+            <legend>Escolha o sabor</legend>
             <!-- opções renderizadas a partir de src/flavors.js -->
           </fieldset>
           <p class="flavor-note" aria-live="polite"></p>
@@ -73,46 +69,45 @@
       </section>
 
       <section class="formula" id="formula" aria-labelledby="formula-title">
-        <p class="mono eyebrow" data-reveal>04 / Fórmula</p>
-        <h2 class="section-title" id="formula-title" data-reveal>Seis ingredientes.<br />Zero enrolação.</h2>
-        <ul class="formula__grid">
-          <li class="card">
-            <span class="mono">F-01</span>
-            <h3>Cafeína natural</h3>
-            <p class="card__dose">160mg</p>
-            <p>Extraída do grão de café verde. Foco rápido, sem pico e queda.</p>
+        <h2 class="section-title" id="formula-title">Seis ingredientes.<br />Zero enrolação.</h2>
+        <ol class="formula__list">
+          <li class="ingredient">
+            <span class="ingredient__code">F-01</span>
+            <h3 class="ingredient__name">Cafeína natural</h3>
+            <span class="ingredient__dose">160mg</span>
+            <p class="ingredient__desc">Extraída do grão de café verde. Foco rápido, sem pico e queda.</p>
           </li>
-          <li class="card">
-            <span class="mono">F-02</span>
-            <h3>Taurina</h3>
-            <p class="card__dose">1000mg</p>
-            <p>Ajuda na resistência em treinos longos e noites de trabalho.</p>
+          <li class="ingredient">
+            <span class="ingredient__code">F-02</span>
+            <h3 class="ingredient__name">Taurina</h3>
+            <span class="ingredient__dose">1000mg</span>
+            <p class="ingredient__desc">Ajuda na resistência em treinos longos e noites de trabalho.</p>
           </li>
-          <li class="card">
-            <span class="mono">F-03</span>
-            <h3>Vitaminas B</h3>
-            <p class="card__dose">B3 · B6 · B12</p>
-            <p>Participam da conversão do alimento em energia.</p>
+          <li class="ingredient">
+            <span class="ingredient__code">F-03</span>
+            <h3 class="ingredient__name">Vitaminas B</h3>
+            <span class="ingredient__dose">B3 · B6 · B12</span>
+            <p class="ingredient__desc">Participam da conversão do alimento em energia.</p>
           </li>
-          <li class="card">
-            <span class="mono">F-04</span>
-            <h3>L-Teanina</h3>
-            <p class="card__dose">100mg</p>
-            <p>Equilibra a cafeína para uma energia estável, sem ansiedade.</p>
+          <li class="ingredient">
+            <span class="ingredient__code">F-04</span>
+            <h3 class="ingredient__name">L-Teanina</h3>
+            <span class="ingredient__dose">100mg</span>
+            <p class="ingredient__desc">Equilibra a cafeína para uma energia estável, sem ansiedade.</p>
           </li>
-          <li class="card">
-            <span class="mono">F-05</span>
-            <h3>Eletrólitos</h3>
-            <p class="card__dose">Na · K · Mg</p>
-            <p>Repõem os minerais que você perde no suor.</p>
+          <li class="ingredient">
+            <span class="ingredient__code">F-05</span>
+            <h3 class="ingredient__name">Eletrólitos</h3>
+            <span class="ingredient__dose">Na · K · Mg</span>
+            <p class="ingredient__desc">Repõem os minerais que você perde no suor.</p>
           </li>
-          <li class="card">
-            <span class="mono">F-06</span>
-            <h3>Sucralose</h3>
-            <p class="card__dose">0g açúcar</p>
-            <p>Doçura sem calorias e sem pico de glicose.</p>
+          <li class="ingredient">
+            <span class="ingredient__code">F-06</span>
+            <h3 class="ingredient__name">Sucralose</h3>
+            <span class="ingredient__dose">0g açúcar</span>
+            <p class="ingredient__desc">Doçura sem calorias e sem pico de glicose.</p>
           </li>
-        </ul>
+        </ol>
       </section>
 
       <section class="manifesto" aria-label="Manifesto">
@@ -122,7 +117,7 @@
             <span aria-hidden="true">Sem açúcar <i>·</i> Sem pausa <i>·</i> Acende no escuro <i>·</i> NØX <i>·</i>&nbsp;</span>
           </div>
         </div>
-        <p class="manifesto__text" data-reveal>
+        <p class="manifesto__text">
           Feito para quem rende quando o resto da cidade apaga. Turnos longos, treinos tarde da noite, a última
           entrega antes do prazo.
         </p>
@@ -130,19 +125,19 @@
     </main>
 
     <footer class="footer">
-      <h2 class="section-title" data-reveal>Encontre perto<br />de você.</h2>
+      <h2 class="section-title">Encontre perto<br />de você.</h2>
       <form class="newsletter">
-        <label class="mono" for="email">Receba o aviso quando chegar na sua cidade</label>
+        <label class="newsletter__label" for="email">Receba o aviso quando chegar na sua cidade.</label>
         <div class="newsletter__row">
           <input id="email" type="email" name="email" placeholder="seu@email.com" autocomplete="email" required />
           <button class="btn" type="submit">Avisar</button>
         </div>
-        <p class="mono newsletter__status" aria-live="polite"></p>
+        <p class="newsletter__status" aria-live="polite"></p>
       </form>
-      <div class="mono footer__bottom">
+      <div class="footer__bottom">
         <span>© 2026 NØX Energy Co.</span>
         <span>Projeto conceitual de portfólio. Marca fictícia.</span>
-        <a href="#top">Voltar ao topo ↑</a>
+        <a href="#top">Voltar ao topo</a>
       </div>
     </footer>
 
