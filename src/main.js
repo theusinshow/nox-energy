@@ -3,6 +3,8 @@ import { DEFAULT_FLAVOR } from './flavors.js';
 import { createScene } from './scene/scene.js';
 import { playIntro } from './motion/intro.js';
 import { initMotion } from './motion/scroll.js';
+import { initFlavorPicker } from './ui/flavor-picker.js';
+import { initNewsletter } from './ui/newsletter.js';
 
 const root = document.documentElement;
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -29,6 +31,8 @@ async function boot() {
   root.classList.add('is-ready');
   initMotion(scene?.can ?? null);
   playIntro(scene?.can ?? null, { reducedMotion });
+  initFlavorPicker(document.querySelector('.flavor-picker'), { onChange: (id) => scene?.setFlavor(id) });
+  initNewsletter(document.querySelector('.newsletter'));
   return scene;
 }
 

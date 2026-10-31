@@ -366,6 +366,7 @@ main > section > *,
 }
 .flavor-option .mono {
   margin-left: auto;
+  white-space: nowrap;
 }
 .flavor-option:has(input:checked) {
   border-color: var(--accent);
