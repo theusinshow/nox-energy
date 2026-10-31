@@ -50,6 +50,7 @@ export function createCan({ flavorId, maxAnisotropy }) {
   const pose = { x: 0, y: 0, z: 0, rotX: 0, rotY: 0, scale: 1 };
   const intro = { y: 0, spin: 0 };
   const flavorSpin = { value: 0 };
+  const drift = { lean: 0, spin: 0 }; // inércia da rolagem, escrita pelo motion
   const tilt = { x: 0, y: 0 };
 
   function setLabel(id) {
@@ -62,15 +63,13 @@ export function createCan({ flavorId, maxAnisotropy }) {
   function update(time, { pointer, idle }) {
     tilt.x += ((idle ? pointer.y * 0.18 : 0) - tilt.x) * 0.06;
     tilt.y += ((idle ? pointer.x * 0.25 : 0) - tilt.y) * 0.06;
-    const float = idle ? Math.sin(time * 1.3) * 0.05 : 0;
-
-    group.position.set(pose.x, pose.y + intro.y + float, pose.z);
+    group.position.set(pose.x, pose.y + intro.y, pose.z);
     group.scale.setScalar(pose.scale);
-    group.rotation.set(pose.rotX + tilt.x, 0, tilt.y * 0.3);
-    spinner.rotation.y = pose.rotY + intro.spin + flavorSpin.value + tilt.y + (idle ? time * 0.12 : 0);
+    group.rotation.set(pose.rotX + tilt.x, 0, tilt.y * 0.3 + drift.lean);
+    spinner.rotation.y = pose.rotY + intro.spin + flavorSpin.value + drift.spin + tilt.y + (idle ? time * 0.12 : 0);
   }
 
-  return { group, pose, intro, flavorSpin, setLabel, update };
+  return { group, spinner, pose, intro, flavorSpin, drift, setLabel, update };
 }
 
 // Torno com phiStart = PI (u = 0.5 de frente para a câmera) e v pelo comprimento de arco,

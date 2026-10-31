@@ -15,7 +15,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;600&family=Unbounded:wght@800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600&family=Unbounded:wght@800&display=swap"
     />
   </head>
   <body>
@@ -36,17 +36,19 @@
         <h1 class="hero__title" aria-label="NØX">
           <span aria-hidden="true">N</span><span aria-hidden="true">Ø</span><span aria-hidden="true">X</span>
         </h1>
+        <div class="can-slot" data-can-slot="hero" aria-hidden="true"></div>
         <div class="can-fallback" aria-hidden="true"><span>NØX</span></div>
         <div class="hero__bottom">
-          <p class="hero__tagline">Energia que acende<br />no escuro.</p>
+          <p class="hero__tagline">Energia que acende<br />no escuro</p>
           <a class="btn" href="#sabores">Descubra os sabores</a>
         </div>
-        <p class="mono hero__meta">160MG cafeína · 0G açúcar · 473ML</p>
+        <p class="mono hero__meta">160 mg cafeína · 0 g açúcar · 473 ml</p>
       </section>
 
       <section class="specs" id="specs" aria-labelledby="specs-title">
+        <div class="can-slot" data-can-slot="specs" aria-hidden="true"></div>
         <div class="specs__content">
-          <h2 class="section-title" id="specs-title">Tudo o que importa.<br />Nada que pese.</h2>
+          <h2 class="section-title" id="specs-title">Tudo o que importa.<br />Nada que pese</h2>
           <dl class="specs__list">
             <div class="spec"><dt class="mono">Cafeína</dt><dd class="spec__value">160<small>mg</small></dd></div>
             <div class="spec"><dt class="mono">Açúcar</dt><dd class="spec__value">0<small>g</small></dd></div>
@@ -57,8 +59,9 @@
 
       <section class="flavors" id="sabores" aria-labelledby="flavors-title">
         <div class="flavors__intro">
-          <h2 class="section-title" id="flavors-title">Escolha sua<br />frequência.</h2>
+          <h2 class="section-title" id="flavors-title">Escolha sua<br />frequência</h2>
         </div>
+        <div class="can-slot" data-can-slot="flavors" aria-hidden="true"></div>
         <div class="flavors__control">
           <fieldset class="flavor-picker">
             <legend>Escolha o sabor</legend>
@@ -69,18 +72,19 @@
       </section>
 
       <section class="formula" id="formula" aria-labelledby="formula-title">
-        <h2 class="section-title" id="formula-title">Seis ingredientes.<br />Zero enrolação.</h2>
+        <h2 class="section-title" id="formula-title">Seis ingredientes.<br />Zero enrolação</h2>
+        <div class="can-slot" data-can-slot="formula" aria-hidden="true"></div>
         <ol class="formula__list">
           <li class="ingredient">
             <span class="ingredient__code">F-01</span>
             <h3 class="ingredient__name">Cafeína natural</h3>
-            <span class="ingredient__dose">160mg</span>
+            <span class="ingredient__dose">160 mg</span>
             <p class="ingredient__desc">Extraída do grão de café verde. Foco rápido, sem pico e queda.</p>
           </li>
           <li class="ingredient">
             <span class="ingredient__code">F-02</span>
             <h3 class="ingredient__name">Taurina</h3>
-            <span class="ingredient__dose">1000mg</span>
+            <span class="ingredient__dose">1.000 mg</span>
             <p class="ingredient__desc">Ajuda na resistência em treinos longos e noites de trabalho.</p>
           </li>
           <li class="ingredient">
@@ -92,7 +96,7 @@
           <li class="ingredient">
             <span class="ingredient__code">F-04</span>
             <h3 class="ingredient__name">L-Teanina</h3>
-            <span class="ingredient__dose">100mg</span>
+            <span class="ingredient__dose">100 mg</span>
             <p class="ingredient__desc">Equilibra a cafeína para uma energia estável, sem ansiedade.</p>
           </li>
           <li class="ingredient">
@@ -104,7 +108,7 @@
           <li class="ingredient">
             <span class="ingredient__code">F-06</span>
             <h3 class="ingredient__name">Sucralose</h3>
-            <span class="ingredient__dose">0g açúcar</span>
+            <span class="ingredient__dose">0 g açúcar</span>
             <p class="ingredient__desc">Doçura sem calorias e sem pico de glicose.</p>
           </li>
         </ol>
@@ -125,9 +129,9 @@
     </main>
 
     <footer class="footer">
-      <h2 class="section-title">Encontre perto<br />de você.</h2>
+      <h2 class="section-title">Encontre perto<br />de você</h2>
       <form class="newsletter">
-        <label class="newsletter__label" for="email">Receba o aviso quando chegar na sua cidade.</label>
+        <label class="newsletter__label" for="email">Receba o aviso quando chegar na sua cidade</label>
         <div class="newsletter__row">
           <input id="email" type="email" name="email" placeholder="seu@email.com" autocomplete="email" required />
           <button class="btn" type="submit">Avisar</button>

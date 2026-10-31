@@ -8,7 +8,7 @@ export function initNewsletter(form) {
     e.preventDefault();
     input.disabled = true;
     button.disabled = true;
-    button.textContent = 'Inscrito!';
-    status.textContent = 'Pronto! Este é um projeto conceitual, então nada foi enviado.';
+    button.textContent = 'Inscrito';
+    status.textContent = 'Inscrição simulada. Este é um projeto conceitual e nada foi enviado.';
   });
 }

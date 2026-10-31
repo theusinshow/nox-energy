@@ -40,6 +40,12 @@ export function lidProfile() {
   );
 }
 
+// Caixa da lata inteira (fundo, corpo e tampa), em unidades da cena.
+export function canBounds() {
+  const ys = [...bottomProfile(), ...lidProfile()].map(([, y]) => y);
+  return { top: Math.max(...ys), bottom: Math.min(...ys), radius: CAN.radius };
+}
+
 // Comprimento de arco acumulado, normalizado de 0 a 1: vira a coordenada v do rótulo,
 // para o desenho não esticar no ombro (onde os pontos ficam mais próximos).
 export function arcLengths(points) {

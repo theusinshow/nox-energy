@@ -2,7 +2,8 @@ import * as THREE from 'three';
 import gsap from 'gsap';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { createCan } from './can.js';
-import { getFlavor } from '../flavors.js';
+import { CAMERA } from './camera.js';
+import { FLAVORS, getFlavor } from '../flavors.js';
 
 // Devolve a thread principal entre etapas pesadas, para não gerar uma tarefa longa única.
 const yieldToMain = () => new Promise((resolve) => setTimeout(resolve, 0));
@@ -16,8 +17,8 @@ export async function createScene(canvas, { flavorId, isMobile, reducedMotion, f
   renderer.toneMappingExposure = 1.1;
 
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 50);
-  camera.position.set(0, 0, 7);
+  const camera = new THREE.PerspectiveCamera(CAMERA.fov, 1, 0.1, 50);
+  camera.position.set(0, 0, CAMERA.z);
 
   const pmrem = new THREE.PMREMGenerator(renderer);
   scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
@@ -73,16 +74,42 @@ export async function createScene(canvas, { flavorId, isMobile, reducedMotion, f
 
   const clock = new THREE.Clock();
   const idle = !reducedMotion;
+  const halfHeight = CAMERA.z * Math.tan((CAMERA.fov * Math.PI) / 360);
+  let drawnOffscreen = false;
   function render() {
     can.update(clock.getElapsedTime(), { pointer, idle });
+    // Com a lata (e o halo de 2.5 de raio) fora da tela, desenha um último frame vazio e para.
+    const { position, scale } = can.group;
+    const reach = 2.5 * scale.y;
+    const offscreen = Math.abs(position.y) - reach > halfHeight || Math.abs(position.x) - reach > halfHeight * camera.aspect;
+    if (offscreen && drawnOffscreen) return;
+    drawnOffscreen = offscreen;
     renderer.render(scene, camera);
+  }
+
+  // Retângulo da lata na tela, em px (sem o halo). Usado para auditar colisão com o texto.
+  const box = new THREE.Box3();
+  const corner = new THREE.Vector3();
+  function canRect() {
+    box.setFromObject(can.spinner, true); // preciso: percorre os vértices, não a caixa girada
+    const xs = [];
+    const ys = [];
+    for (let i = 0; i < 8; i++) {
+      corner.set(i & 1 ? box.max.x : box.min.x, i & 2 ? box.max.y : box.min.y, i & 4 ? box.max.z : box.min.z).project(camera);
+      xs.push(((corner.x + 1) / 2) * innerWidth);
+      ys.push(((1 - corner.y) / 2) * innerHeight);
+    }
+    return { left: Math.min(...xs), right: Math.max(...xs), top: Math.min(...ys), bottom: Math.max(...ys) };
   }
   renderer.setAnimationLoop(render);
   document.addEventListener('visibilitychange', () => renderer.setAnimationLoop(document.hidden ? null : render));
 
   let current = flavorId;
+  const order = (id) => FLAVORS.findIndex((f) => f.id === id);
   function setFlavor(id) {
     if (id === current) return Promise.resolve();
+    // Gira para a frente ao avançar na lista e para trás ao voltar.
+    const direction = order(id) > order(current) ? 1 : -1;
     current = id;
     const target = new THREE.Color(getFlavor(id).accent);
     const colors = [rimLeft.color, rimRight.color, glow.material.color];
@@ -96,13 +123,13 @@ export async function createScene(canvas, { flavorId, isMobile, reducedMotion, f
     // Giro de 360°; o rótulo troca na metade, quando a frente está de costas para a câmera.
     return new Promise((resolve) => {
       const tl = gsap.timeline({ onComplete: resolve });
-      tl.to(can.flavorSpin, { value: `+=${Math.PI * 2}`, duration: 0.9, ease: 'power3.inOut' }, 0);
+      tl.to(can.flavorSpin, { value: `+=${Math.PI * 2 * direction}`, duration: 0.9, ease: 'power3.inOut' }, 0);
       tl.call(() => can.setLabel(id), null, 0.45);
       colors.forEach((c) => tl.to(c, { r: target.r, g: target.g, b: target.b, duration: 0.5, ease: 'power2.out' }, 0.3));
     });
   }
 
-  return { can, setFlavor };
+  return { can, setFlavor, canRect };
 }
 
 function radialTexture() {
