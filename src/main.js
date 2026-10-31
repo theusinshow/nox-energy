@@ -1,6 +1,8 @@
 import './styles/main.css';
 import { DEFAULT_FLAVOR } from './flavors.js';
 import { createScene } from './scene/scene.js';
+import { playIntro } from './motion/intro.js';
+import { initMotion } from './motion/scroll.js';
 
 const root = document.documentElement;
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -25,6 +27,8 @@ async function boot() {
   }
 
   root.classList.add('is-ready');
+  initMotion(scene?.can ?? null);
+  playIntro(scene?.can ?? null, { reducedMotion });
   return scene;
 }
 
