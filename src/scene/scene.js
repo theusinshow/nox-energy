@@ -7,6 +7,7 @@ import { FLAVORS } from '../flavors.js';
 
 // Devolve a thread principal entre etapas pesadas, para não gerar uma tarefa longa única.
 const yieldToMain = () => new Promise((resolve) => setTimeout(resolve, 0));
+const TURN = Math.PI * 2;
 
 // Renderer, câmera, luzes e lata. Rejeita se o WebGL não estiver disponível.
 export async function createScene(canvas, { flavorId, isMobile, reducedMotion, fontsReady }) {
@@ -59,12 +60,11 @@ export async function createScene(canvas, { flavorId, isMobile, reducedMotion, f
   resize();
   window.addEventListener('resize', resize);
 
-  const clock = new THREE.Clock();
   const idle = !reducedMotion;
   const halfHeight = CAMERA.z * Math.tan((CAMERA.fov * Math.PI) / 360);
   let drawnOffscreen = false;
   function render() {
-    can.update(clock.getElapsedTime(), { pointer, idle });
+    can.update({ pointer, idle });
     // Com a lata fora da tela (1.4 cobre a altura e a inclinação), desenha um último frame vazio e para.
     const { position, scale } = can.group;
     const reach = 1.4 * scale.y;
@@ -104,11 +104,35 @@ export async function createScene(canvas, { flavorId, isMobile, reducedMotion, f
       return Promise.resolve();
     }
 
-    // Giro de 360°; o rótulo troca na metade, quando a frente está de costas para a câmera.
+    // O giro do arraste passa para o da troca, sem mudar o ângulo visível; assim a volta
+    // termina num múltiplo exato de 360°, com a frente (e o nome novo) para a câmera.
+    const spin = can.flavorSpin;
+    spin.value += can.drag.spin;
+    can.drag.spin = 0;
+    can.drag.velocity = 0;
+    const from = spin.value;
+    // Pelo menos 3/4 de volta no sentido do giro, para a troca de rótulo ficar escondida.
+    const to = direction > 0 ? Math.ceil((from + TURN * 0.75) / TURN) * TURN : Math.floor((from - TURN * 0.75) / TURN) * TURN;
+    const backFacing = to - direction * Math.PI;
+    let swapped = false;
+    const swap = () => {
+      if (swapped) return;
+      swapped = true;
+      can.setLabel(id);
+    };
+
     return new Promise((resolve) => {
-      const tl = gsap.timeline({ onComplete: resolve });
-      tl.to(can.flavorSpin, { value: `+=${Math.PI * 2 * direction}`, duration: 0.9, ease: 'power3.inOut' }, 0);
-      tl.call(() => can.setLabel(id), null, 0.45);
+      gsap.to(spin, {
+        value: to,
+        duration: 0.9,
+        ease: 'power3.inOut',
+        // O rótulo troca quando a frente passa de costas para a câmera.
+        onUpdate: () => direction * (spin.value - backFacing) >= 0 && swap(),
+        onComplete: () => {
+          swap();
+          resolve();
+        },
+      });
     });
   }
 

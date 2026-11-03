@@ -191,6 +191,18 @@ main,
 .footer {
   position: relative;
 }
+/* Arraste da lata (ui/can-drag.js): o gesto horizontal gira a lata, o vertical rola. */
+main {
+  touch-action: pan-y pinch-zoom;
+}
+.can-grab {
+  cursor: grab;
+}
+.is-dragging-can,
+.is-dragging-can * {
+  cursor: grabbing !important;
+  user-select: none;
+}
 main > section {
   padding-inline: var(--gutter);
 }
